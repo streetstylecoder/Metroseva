@@ -26,6 +26,23 @@ def home(request):
         response = requests.get(url)
         data = response.json()
         interchanges=data['interchange']
+        path=data['path']
+        time=data['time']
+        time=int(time)
+        change=[]
+        
+        for j in range(len(interchanges)):
+            name="line"+str(j+1)
+            val=data[name]
+            val[0]=val[0]+" to "
+            change.append(val)
+            
+        
+        towards=[]
+        towards_data=data['lineEnds']
+        for i in range(len(towards_data)):
+            towards.append(towards_data[i])
+        
             
         number_of_interchanges=len(interchanges)
         
@@ -35,6 +52,10 @@ def home(request):
             "destination":d,
             "interchanges":interchanges,
             "number_of_interchanges":number_of_interchanges,
+            "path":path,
+            "time":time,
+            "change":change,
+            "towards":towards,
         }
         print(startloc)
         print(destination)
