@@ -403,9 +403,17 @@
 
 <!-- input content comes here-->
 
-<form name="location form">
+<form name="location form" method="post">
+{% csrf_token %}
+<h2>Showing route for 
+    {{startloc}} to {{destination}} </h2> 
+    <h3>Number of interchanges-{{number_of_interchanges}} </h3>
+    <h3> Interchange at <br>
+{% for i in interchanges %} <br>
+{{ forloop.counter }}.{{i}} 
+{% endfor %}
+</h3>
 
-    {{startloc}} to {{destination}} <br>
     <label>Please select starting location</label>
     <select name="startloc">
         

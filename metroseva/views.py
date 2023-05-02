@@ -8,9 +8,12 @@ import json
 
 
 def home(request):
-    if request.method == 'GET':
-        startloc=request.GET['startloc']
-        destination = request.GET['Destination'] 
+    if request.method == 'POST':
+        startloc=request.POST['startloc']
+        destination = request.POST['Destination'] 
+        
+        s=startloc
+        d=destination
         startloc=startloc.lower()
         destination=destination.lower()
         startloc=startloc.replace(" ","+")
@@ -18,23 +21,26 @@ def home(request):
         startloc=str(startloc)
         destination=str(destination)
         
-        
-        url=f'https://us-central1-delhimetroapi.cloudfunctions.net/route-get?from={startloc}&to={destination}'
-        try:
+        url=f"https://us-central1-delhimetroapi.cloudfunctions.net/route-get?from={startloc}&to={destination}"
         # Some code that may raise an exception
-            result=request.get(url)
-            return JsonResponse({'result': result})
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-        
+        response = requests.get(url)
+        data = response.json()
+        interchanges=data['interchange']
+            
+        number_of_interchanges=len(interchanges)
         
         
         context={
-            "startloc":startloc,
-            "destination":destination,
+            "startloc":s,
+            "destination":d,
+            "interchanges":interchanges,
+            "number_of_interchanges":number_of_interchanges,
         }
         print(startloc)
         print(destination)
         return render(request, 'index.html',context)
             
     return render(request, 'index.html')
+
+def results(request):
+    return render(request, 'route.html')
